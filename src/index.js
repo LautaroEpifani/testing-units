@@ -1,3 +1,4 @@
+import { bookingsList } from "./data/bookings";
 import { roomsList } from "./data/rooms";
 
 export class Booking {
@@ -11,9 +12,22 @@ export class Booking {
   }
 
   get fee() {
-    return null;
-    //returns the fee, including discounts on room and booking
+    return this.calculatefee();
   }
+
+  calculatefee(value) {
+    const feeArray = [];
+    for(let i = 0; i < bookingsList.length ; i++){
+    const bookingDiscountPercentaje = bookingsList[i].discount;
+    const roomDiscountPercentaje = bookingsList[i].room.discount;
+    const totalDiscountPercentaje = bookingDiscountPercentaje + roomDiscountPercentaje;
+    const discount = (value * totalDiscountPercentaje) / 100
+    const fee = value - discount;
+    feeArray.push(fee)
+  }
+  return feeArray
+  }
+
 }
 
 export class Room {
@@ -110,28 +124,29 @@ export class Room {
     const checkIn = [];
     const checkOut = [];
     let datesArray = [];
-    let roomsArray = [];
     let checkRoomAvaliable = [];
     for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       datesArray.push(new Date(d));
     }
-    for(roomCount = 0; roomCount < rooms.length ; roomCount ++) {
-        for (i = 0; i < datesArray.length; i++) {
-          for (j = 0; j < roomsList[roomCount].bookings.length; j++) {
-            checkOut[j] = roomsList[roomCount].bookings[j].checkOut;
-            checkIn[j] = roomsList[roomCount].bookings[j].checkIn; //&& datesArray[datesArray.length - 1] > checkOut[j]
-            if (datesArray[i] >= checkIn[j] && datesArray[i] <= checkOut[j]) {
-              roomsArray.push(...false);
-            } else {
-              roomsArray.push(...true);
-            }
-          }
-        } 
-
-        checkRoomAvaliable[roomCount] = roomsArray;
+    let roomsArray = Array.from( new Array(rooms.length), function() { return []; } );
+   for(roomCount = 0; roomCount < rooms.length ; roomCount ++) {  
+    for (i = 0; i < datesArray.length; i++) {
+      for (j = 0; j < roomsList[roomCount].bookings.length; j++) {
+        checkOut[j] = roomsList[roomCount].bookings[j].checkOut;
+        checkIn[j] = roomsList[roomCount].bookings[j].checkIn;
+          if (datesArray[i] >= checkIn[j] && datesArray[i] <= checkOut[j]) {
+          roomsArray[roomCount].push(false)
+        } else {
+          roomsArray[roomCount].push(true)
+        }
+      }      
     }
-
-    console.log(checkRoomAvaliable);
-    //returns an array of all rooms in the array that are not occupied for the entire duration
+  }
+   for(roomCount = 0; roomCount < rooms.length ; roomCount ++) {  
+        if(!(roomsArray[roomCount].includes(false))) {
+          checkRoomAvaliable.push(rooms[roomCount])
+        }
+   }
+   return checkRoomAvaliable
   }
 }

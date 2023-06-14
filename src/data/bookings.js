@@ -16,7 +16,7 @@ export const bookingsList = [
     email: "gabriela@gmail.com ",
     checkIn: new Date("2023-06-30"),
     checkOut: new Date("2023-07-07"),
-    discount: 20,
+    discount: 10,
     room: {
       name: "Queen Double Bed Room",
       rate: 4.5,
@@ -28,7 +28,7 @@ export const bookingsList = [
     email: "laura@gmail.com ",
     checkIn: new Date("2023-07-09"),
     checkOut: new Date("2023-07-20"),
-    discount: 20,
+    discount: 30,
     room: {
       name: "Queen Double Bed Room",
       rate: 4.5,
